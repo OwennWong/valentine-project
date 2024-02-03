@@ -3,39 +3,110 @@
 <head>
     <title>Be My Valentine</title>
     <style>
-        #noButton {
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f2e9e4; /* Soft background color */
+            color: #22223b; /* Dark text for contrast */
+        }
+        #imageContainer {
+            margin-bottom: 30px;
+        }
+        #questionContainer {
+            position: relative;
+            display: inline-block;
+            background-color: #9a8c98; /* Subtle background for the question */
+            padding: 40px;
+            border-radius: 10px; /* Rounded corners for the container */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft shadow for depth */
+            text-align: center; /* Center aligns the content */
+        }
+        .buttons {
+            margin-top: 20px; /* Increase space between the question and the buttons */
+        }
+        button {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px; /* Rounded corners for buttons */
+            font-size: 16px;
+            margin: 0 5px; /* Adjusted spacing between buttons */
             transition: transform 0.3s ease;
+        }
+        #yesButton {
+            background-color: #c9ada7; /* Soft pink for the Yes button */
+            color: white;
+            transform-origin: center; /* Ensures scaling is centered */
+        }
+        #noButton {
+            background-color: #4a4e69; /* Dark color for the No button */
+            color: white;
         }
         #response {
             display: none;
             margin-top: 20px;
+            font-size: 24px;
+            color: #9a8c98; /* Color theme for the response */
+        }
+        img {
+            max-width: 200px;
+            border-radius: 50%; /* Makes the image round */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Adds shadow to the image */
         }
     </style>
 </head>
 <body>
-    <h2>Will you be my Valentine?</h2>
-    <button id="yesButton" onclick="giveResponse('yes')">Yes</button>
-    <button id="noButton" onclick="makeYesBigger()">No</button>
+    <div id="imageContainer">
+        <img src="cartoon-heart.png" alt="Cartoon Heart">
+    </div>
+    <div id="questionContainer">
+        <h2 id="questionText">Will you be my Valentine?</h2>
+        <button id="yesButton" onclick="giveResponse('yes')">Yes</button>
+        <button id="noButton" onclick="handleNo()">No</button>
+    </div>
     <div id="response"></div>
 
     <script>
+        var noClickCount = 0;
+
+        function handleNo() {
+            noClickCount++;
+            makeYesBigger();
+
+
+            // Change the question based on the number of "No" clicks
+            var questionText = document.getElementById("questionText");
+            if (noClickCount === 2) {
+                questionText.innerHTML = "Are you really sure?";
+            } else if (noClickCount === 4) {
+                questionText.innerHTML = "Are you really really sure?";
+            } else if (noClickCount === 6) {
+                questionText.innerHTML = "Please say yes 😢";
+            } else if (noClickCount === 8) {
+                questionText.innerHTML = "Why aren't you saying yes??";
+            } else if (noClickCount === 10) {
+                questionText.innerHTML = "Ahhhhh don't say no anymore";
+            } else if (noClickCount === 14) {
+                questionText.innerHTML = "Nooooooo 😔";
+            } else if (noClickCount === 18) {
+                questionText.innerHTML = "Last chanceee plsss";
+            }
+    }
+
         function makeYesBigger() {
             var yesButton = document.getElementById("yesButton");
-            var currentSize = yesButton.style.transform;
-            var scale = currentSize ? parseFloat(currentSize.replace('scale(', '')) + 0.1 : 1.1;
-            yesButton.style.transform = 'scale(' + scale + ')';
-            document.getElementById("response").style.display = "none"; // Hide response if visible
+            var currentScale = yesButton.style.transform.replace('scale(', '').replace(')', '') || 1;
+            var newScale = parseFloat(currentScale) + 0.1; // Incrementally increases the scale
+            yesButton.style.transform = 'scale(' + newScale + ')';
         }
 
         function giveResponse(answer) {
-            var responseText = answer === 'yes' ? "Yayyyy! 😊" : "Oh no, please reconsider! 😢";
-            var responseDiv = document.getElementById("response");
-            responseDiv.style.display = "block";
-            responseDiv.innerHTML = responseText;
-            if(answer === 'yes') {
-                document.getElementById("yesButton").style.display = "none";
-                document.getElementById("noButton").style.display = "none";
-            }
+            questionText.innerHTML = "Yayyyy! Seee you. 😊";
+            // Optionally, hide both buttons after getting a response
+            document.getElementById("yesButton").style.display = "none";
+            document.getElementById("noButton").style.display = "none";
         }
     </script>
 </body>
